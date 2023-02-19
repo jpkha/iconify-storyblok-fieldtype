@@ -1,38 +1,55 @@
-<template>
-  <div>
-    Google snippet preview:
-    <div class="p-metatags__preview">
-      <div class="p-metatags__google-title">{{ model.title || 'Your title' }}</div>
-      <div class="p-metatags__google-link">yoursite.com/example</div>
-      <div class="p-metatags__google-description">{{ model.description || 'Your description' }}</div>
-    </div>
-    <div class="uk-form-row">
-      <label>Meta Title</label>
-      <input type="text" placeholder="Your title" v-model="model.title" class="uk-width-1-1">
-    </div>
-
-    <div class="uk-form-row">
-      <label>Meta description</label>
-      <textarea rows="4" placeholder="Your description" v-model="model.description" class="uk-width-1-1"></textarea>
-    </div>
-  </div>
-</template>
-
 <script>
-export default {
+const Fieldtype = {
   mixins: [window.Storyblok.plugin],
+  template: `
+  <div>
+     <div class="uk-text-center" v-if="model.icon">
+     <div> Selected : <span style="font-weight: bold">{{ model.icon }}</span></div>
+     <div style="height: 48px; width: auto; padding:8px;display: flex; align-items:center; justify-content:center;">
+      <iconify-icon v-bind:icon="model.icon" style="height: 48px; width: auto; font-size: 48px"></iconify-icon>
+      <small style="cursor:pointer;" @click="removeIcon">(remove)</small>  
+    </div>
+    </div>
+    <form class="uk-form" @submit.prevent="search">
+      <div class="uk-margin">
+        <input class="uk-input uk-form-width-medium" v-model="query" placeholder="Search icon" />
+        <button class="uk-button uk-button-default" type="submit">Search</button>
+      </div>
+    </form>
+    
+    <span v-for="icon in iconify" :key="icon" style="cursor:pointer;" @click="setItem(icon)"
+      style="margin: 5px; height: 24px; width: auto; display: inline-block;">
+      <iconify-icon v-bind:icon="icon" style="font-size: 24px"></iconify-icon>
+    </span>
+  </div>`,
+    data() {
+    return {
+      iconify: [],
+      query: '',
+    }
+  },
   methods: {
+    search() {
+      return fetch(`https://api.iconify.design/search?query=${this.query}`)
+      .then((response) => response.json())
+      .then((data) => {
+        this.iconify = data.icons;
+      });
+    },
     initWith() {
       return {
-        // needs to be equal to your storyblok plugin name
-        plugin: 'my-plugin-name',
-        title: '',
-        description: ''
+        plugin: 'iconify',
+        icon: '',
       }
     },
+    setItem(name) {
+      this.model.icon = name;
+    },
+    removeIcon() {
+      this.model.icon = '';
+    },
     pluginCreated() {
-      // eslint-disable-next-line
-      console.log('View source and customize: https://github.com/storyblok/storyblok-fieldtype')
+        this.$sb.getScript('https://code.iconify.design/iconify-icon/1.0.3/iconify-icon.min.js');
     }
   },
   watch: {
@@ -46,20 +63,3 @@ export default {
 }
 </script>
 
-<style>
-  .p-metatags__google-title {
-    color: blue;
-    text-decoration: underline;
-  }
-
-  .p-metatags__google-link {
-    color: green;
-  }
-
-  .p-metatags__preview {
-    margin: 5px 0 15px;
-    padding: 10px;
-    color: #000;
-    background: #FFF;
-  }
-</style>

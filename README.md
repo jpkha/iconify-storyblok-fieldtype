@@ -1,35 +1,29 @@
-# Storyblok Field-Type
+# Storyblok Field-Type Heroicons
 
-> A Storyblok Field-Type Plugin Starter Project
+This field-type allows users to choose icons with each of the available icon styles from [Iconify](https://iconify.design/).
 
-## Project setup
-```
-npm install
-```
+Name | Description                                  | Author
+------------ |----------------------------------------------| -------------
+Iconify | Allows users to select any icon from Iconify | [Jean-Philippe Kha](https://github.com/jpkha)
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+![plugin-iconify](plugin-iconify.gif)
 
-In the browser, you will see the white screen with the following error in the console:
-```
-[Vue warn]: Error in created hook: "SyntaxError: Failed to execute 'postMessage' on 'Window': Invalid target origin 'null//app.storyblok.com' in a call to 'postMessage'."
+## Usage
 
-DOMException: Failed to execute 'postMessage' on 'Window': Invalid target origin 'null//app.storyblok.com' in a call to 'postMessage'.
-```
-But don't worry, this project is just a template and only works as part of the storyblok app. See: 
-https://www.storyblok.com/docs/plugins/enable-local-dev-mode
+Search and select your desired icon.
 
-### Compiles and minifies for production
+Returns an object with the icon name:
+
 ```
-npm run build
+{
+  "plugin": "iconify",
+  "icon": "<icon name>",
+  ...
+}
 ```
 
-### Lints and fixes files
-```
-npm run lint
-```
 
-### Customize configuration
-https://www.storyblok.com/docs/Guides/Creating-a-field-type-plugin#how-to-develop-plugins-locally
+## How to use ?
+You can check [https://github.com/iconify/iconify](https://github.com/iconify/iconify) on how to use Iconify inside your project.
+
+From the plugin, you got a value, for example, `logos:storyblok` then you can use it dynamically by using the Iconify component from your favorite framework.
